@@ -2,8 +2,8 @@
 Django Auth Reports
 ===================
 
-A Django application that:
--Adds csv downloads of group permissions
+A Django application that:  
+-Adds csv downloads of group permissions  
 -Adds right-side filtering in m2m filter_horizontal widgets
 
 
