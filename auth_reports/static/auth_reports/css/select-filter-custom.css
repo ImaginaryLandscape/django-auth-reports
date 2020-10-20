@@ -1,0 +1,12 @@
+/* Override djangocms-admin-style height */
+.selector .selector-chosen select[multiple] {
+  height: 17.2em !important
+}
+
+/* Override widgets.css selector styles */
+.selector-chosen select {
+  border-top: 1px solid #ccc;
+}
+.selector .selector-filter input {
+  width: 320px;
+}
