@@ -1,6 +1,6 @@
-=================
+
 Django Auth Reports
-=================
+===================
 
 A Django application that:
 -Adds csv downloads of group permissions
