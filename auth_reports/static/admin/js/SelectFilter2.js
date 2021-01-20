@@ -1,4 +1,4 @@
-/*global SelectBox, addEvent, gettext, interpolate, quickElement, SelectFilter*/
+/*global SelectBox, gettext, interpolate, quickElement, SelectFilter*/
 /*
 SelectFilter2 - Turns a multiple-select box into a filter interface.
 
@@ -102,37 +102,27 @@ Requires jQuery, core.js, and SelectBox.js.
                     [field_name]
                 )
             );
-	
 
             var to_box = quickElement('select', selector_chosen, '', 'id', field_id + '_to', 'multiple', 'multiple', 'size', from_box.size, 'name', from_box.getAttribute('name'));
             to_box.className = 'filtered';
-	    // If using djangocms-admin-style, the following will restore the two select elements to equal width
-            // to_box.style = '17.2em!important';	
-            from_box.setAttribute('name', from_box.getAttribute('name') + '_old');
 
-
-	    var chosen_filter_p = quickElement('p', selector_chosen, '', 'id', field_id + '_chosen_filter');
+            var chosen_filter_p = quickElement('p', selector_chosen, '', 'id', field_id + '_chosen_filter');
             chosen_filter_p.className = 'selector-filter';
-
             var chosen_search_filter_label = quickElement('label', chosen_filter_p, '', 'for', field_id + '_chosen_input');
-
             quickElement(
                 'span', chosen_search_filter_label, '',
                 'class', 'help-tooltip search-label-icon',
                 'title', interpolate(gettext("Type into this box to filter down the list of available %s."), [field_name])
             );
-
             chosen_filter_p.appendChild(document.createTextNode(' '));
-
             var chosen_filter_input = quickElement('input', chosen_filter_p, '', 'type', 'text', 'placeholder', gettext("Filter"));
             chosen_filter_input.id = field_id + '_chosen_input';
-
             selector_chosen.appendChild(to_box);
-
 
             var clear_all = quickElement('a', selector_chosen, gettext('Remove all'), 'title', interpolate(gettext('Click to remove all chosen %s at once.'), [field_name]), 'href', '#', 'id', field_id + '_remove_all_link');
             clear_all.className = 'selector-clearall';
 
+            from_box.setAttribute('name', from_box.getAttribute('name') + '_old');
 
             // Set up the JavaScript event handlers for the select box filter interface
             var move_selection = function(e, elem, move_func, from, to) {
@@ -142,22 +132,42 @@ Requires jQuery, core.js, and SelectBox.js.
                 }
                 e.preventDefault();
             };
-            addEvent(choose_all, 'click', function(e) { move_selection(e, this, SelectBox.move_all, field_id + '_from', field_id + '_to'); });
-            addEvent(add_link, 'click', function(e) { move_selection(e, this, SelectBox.move, field_id + '_from', field_id + '_to'); });
-            addEvent(remove_link, 'click', function(e) { move_selection(e, this, SelectBox.move, field_id + '_to', field_id + '_from'); });
-            addEvent(clear_all, 'click', function(e) { move_selection(e, this, SelectBox.move_all, field_id + '_to', field_id + '_from'); });
-            addEvent(filter_input, 'keypress', function(e) { SelectFilter.filter_key_press(e, field_id, 'avail'); });
-            addEvent(filter_input, 'keyup', function(e) { SelectFilter.filter_key_up(e, field_id, 'avail'); });
-            addEvent(filter_input, 'keydown', function(e) { SelectFilter.filter_key_down(e, field_id, 'avail'); });
-            addEvent(chosen_filter_input, 'keypress', function(e) { SelectFilter.filter_key_press(e, field_id, 'chosen'); });
-            addEvent(chosen_filter_input, 'keyup', function(e) { SelectFilter.filter_key_up(e, field_id, 'chosen'); });
-            addEvent(chosen_filter_input, 'keydown', function(e) { SelectFilter.filter_key_down(e, field_id, 'chosen'); });
-            addEvent(selector_div, 'change', function(e) {
+            choose_all.addEventListener('click', function(e) {
+                move_selection(e, this, SelectBox.move_all, field_id + '_from', field_id + '_to');
+            });
+            add_link.addEventListener('click', function(e) {
+                move_selection(e, this, SelectBox.move, field_id + '_from', field_id + '_to');
+            });
+            remove_link.addEventListener('click', function(e) {
+                move_selection(e, this, SelectBox.move, field_id + '_to', field_id + '_from');
+            });
+            clear_all.addEventListener('click', function(e) {
+                move_selection(e, this, SelectBox.move_all, field_id + '_to', field_id + '_from');
+            });
+            filter_input.addEventListener('keypress', function(e) {
+                SelectFilter.filter_key_press(e, field_id);
+            });
+            filter_input.addEventListener('keyup', function(e) {
+                SelectFilter.filter_key_up(e, field_id);
+            });
+            filter_input.addEventListener('keydown', function(e) {
+                SelectFilter.filter_key_down(e, field_id);
+            });
+            chosen_filter_input.addEventListener('keypress', function(e) {
+                SelectFilter.filter_key_press(e, field_id);
+            });
+            chosen_filter_input.addEventListener('keyup', function(e) {
+                SelectFilter.filter_key_up(e, field_id);
+            });
+            chosen_filter_input.addEventListener('keydown', function(e) {
+                SelectFilter.filter_key_down(e, field_id);
+            });
+            selector_div.addEventListener('change', function(e) {
                 if (e.target.tagName === 'SELECT') {
                     SelectFilter.refresh_icons(field_id);
                 }
             });
-            addEvent(selector_div, 'dblclick', function(e) {
+            selector_div.addEventListener('dblclick', function(e) {
                 if (e.target.tagName === 'OPTION') {
                     if (e.target.closest('select').id === field_id + '_to') {
                         SelectBox.move(field_id + '_to', field_id + '_from');
@@ -167,7 +177,9 @@ Requires jQuery, core.js, and SelectBox.js.
                     SelectFilter.refresh_icons(field_id);
                 }
             });
-            addEvent(findForm(from_box), 'submit', function() { SelectBox.select_all(field_id + '_to'); });
+            findForm(from_box).addEventListener('submit', function() {
+                SelectBox.select_all(field_id + '_to');
+            });
             SelectBox.init(field_id + '_from');
             SelectBox.init(field_id + '_to');
             // Move selected from_box options to to_box
@@ -175,15 +187,9 @@ Requires jQuery, core.js, and SelectBox.js.
 
             if (!is_stacked) {
                 // In horizontal mode, give the same height to the two boxes.
-                var j_from_box = $(from_box);
-                var j_to_box = $(to_box);
-                var resize_filters = function() { j_to_box.height($(filter_p).outerHeight() + j_from_box.outerHeight()); };
-                if (j_from_box.outerHeight() > 0) {
-                    resize_filters(); // This fieldset is already open. Resize now.
-                } else {
-                    // This fieldset is probably collapsed. Wait for its 'show' event.
-                    j_to_box.closest('fieldset').one('show.fieldset', resize_filters);
-                }
+                var j_from_box = $('#' + field_id + '_from');
+                var j_to_box = $('#' + field_id + '_to');
+                j_to_box.height($(filter_p).outerHeight() + j_from_box.outerHeight());
             }
 
             // Initial icon refresh
@@ -252,12 +258,13 @@ Requires jQuery, core.js, and SelectBox.js.
         }
     };
 
-    addEvent(window, 'load', function(e) {
+    window.addEventListener('load', function(e) {
         $('select.selectfilter, select.selectfilterstacked').each(function() {
             var $el = $(this),
                 data = $el.data();
             SelectFilter.init($el.attr('id'), data.fieldName, parseInt(data.isStacked, 10));
         });
+
         var head = document.head;
         var link = document.createElement("link");
         link.type = "text/css";

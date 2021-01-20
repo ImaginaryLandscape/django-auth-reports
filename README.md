@@ -6,6 +6,12 @@ A Django application that:
 -Adds csv downloads of group permissions  
 -Adds right-side filtering in m2m filter_horizontal widgets
 
+Compatibility
+=============
+
+For Django 1.x, use django-auth-reports 1.x
+
+For Django 2.x, use django-auth-reports 2.x
 
 Installation
 ============
