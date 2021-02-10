@@ -7,10 +7,11 @@ from django.http import HttpResponse
 def export_as_csv(self, request, queryset):
 
     meta = self.model._meta
+    domain = request.get_host()
     field_names = ['Group', 'Application', 'Model', 'Permission']
 
     response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename={}.csv'.format(meta)
+    response['Content-Disposition'] = 'attachment; filename={}-{}.csv'.format(domain, meta)
     writer = csv.writer(response)
 
     writer.writerow(field_names)

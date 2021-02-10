@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='django-auth-reports',
-    version='2.0.0',
+    version='2.0.1',
     description='Adds csv reports for auth groups, right-side filtering for filter_horizontal m2m widgets',
 
     author='Imaginary Landscape',
