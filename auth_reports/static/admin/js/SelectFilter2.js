@@ -145,22 +145,22 @@ Requires jQuery, core.js, and SelectBox.js.
                 move_selection(e, this, SelectBox.move_all, field_id + '_to', field_id + '_from');
             });
             filter_input.addEventListener('keypress', function(e) {
-                SelectFilter.filter_key_press(e, field_id);
+                SelectFilter.filter_key_press(e, field_id, 'avail');
             });
             filter_input.addEventListener('keyup', function(e) {
-                SelectFilter.filter_key_up(e, field_id);
+                SelectFilter.filter_key_up(e, field_id, 'avail');
             });
             filter_input.addEventListener('keydown', function(e) {
-                SelectFilter.filter_key_down(e, field_id);
+                SelectFilter.filter_key_down(e, field_id, 'avail');
             });
             chosen_filter_input.addEventListener('keypress', function(e) {
-                SelectFilter.filter_key_press(e, field_id);
+                SelectFilter.filter_key_press(e, field_id, 'chosen');
             });
             chosen_filter_input.addEventListener('keyup', function(e) {
-                SelectFilter.filter_key_up(e, field_id);
+                SelectFilter.filter_key_up(e, field_id, 'chosen');
             });
             chosen_filter_input.addEventListener('keydown', function(e) {
-                SelectFilter.filter_key_down(e, field_id);
+                SelectFilter.filter_key_down(e, field_id, 'chosen');
             });
             selector_div.addEventListener('change', function(e) {
                 if (e.target.tagName === 'SELECT') {
